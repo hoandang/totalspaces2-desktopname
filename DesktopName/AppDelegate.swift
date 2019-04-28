@@ -14,8 +14,8 @@ import Cocoa
     var timer : Timer!
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        let statusBar = NSStatusBar.system()
-        statusItem = statusBar.statusItem(withLength: 49)
+        let statusBar = NSStatusBar.system
+        statusItem = statusBar.statusItem(withLength: 50)
         statusItem.menu = menu()
         
         let current = tsapi_currentSpaceNumberOnDisplay(0);
@@ -24,7 +24,7 @@ import Cocoa
         setSpaceChangeCallback(spaceChanged)
         
         timer = Timer(timeInterval: 2, target: self, selector: #selector(AppDelegate.watchdog(_:)), userInfo: nil, repeats: true)
-        RunLoop.current.add(timer, forMode: RunLoopMode.commonModes)
+        RunLoop.current.add(timer, forMode: RunLoop.Mode.common)
     }
 
     func nameForSpace(_ space: UInt32) -> String {
@@ -46,16 +46,16 @@ import Cocoa
     }
     
     func setTitle(_ name : String) {
-        let font = NSFont(name: "Helvetica-Light", size: 9)
-        let attrs : [String : Any] = [
-            NSFontAttributeName : font as Any,
-            NSBaselineOffsetAttributeName : -1.5
+        let font = NSFont(name: "Helvetica-Light", size: 14)
+        let attrs :  [NSAttributedString.Key : Any] = [
+            NSAttributedString.Key.font : font as Any,
+            NSAttributedString.Key.baselineOffset : -1.5 as Any
         ]
         let str = NSAttributedString(string: name, attributes: attrs)
         statusItem.attributedTitle = str
     }
     
-    func watchdog(_ timer : Timer) {
+    @objc func watchdog(_ timer : Timer) {
         let space = tsapi_currentSpaceNumberOnDisplay(0)
         setTitle(nameForSpace(space))
     }
@@ -74,8 +74,8 @@ import Cocoa
         return mi;
     }
     
-    func quit(_ sender : AnyObject?) {
-        NSApplication.shared().terminate(self)
+    @objc func quit(_ sender : AnyObject?) {
+        NSApplication.shared.terminate(self)
     }
 
 }
